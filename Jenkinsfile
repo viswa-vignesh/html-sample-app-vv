@@ -26,14 +26,6 @@ pipeline {
                 git url: "${REPO_NAME}", branch: "${BRANCH_NAME}"
             }
         }
-        //stage 2
-        stage('git checkout') {
-            steps {
-                echo 'checking out git repo'
-                // execute git cmd from jenkins
-                git url: "${REPO_NAME}", branch: "${BRANCH_NAME}"
-            }
-        }
         //stage 3
         stage('sast with sonar scanner') {
             steps {
