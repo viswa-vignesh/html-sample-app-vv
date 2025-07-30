@@ -5,6 +5,8 @@ pipeline {
         BRANCH_NAME = "master"
         SONAR_HOME = 'C:\\Users\\Administrator\\Documents\\tools\\sonar-scanner\\bin'
         SONAR_TOKEN = credentials('VV-Day3-Project-Token')
+        SONAR_PROJECT_KEY = 'VV-Day3-Project'
+        SONAR_SERVER_NAME = 'VV-SonarQube-Server'
     }
 
     stages {
@@ -34,13 +36,18 @@ pipeline {
                 echo 'sast '
                 // execute sonar cmd
                 //bat 'sonar-scanner.bat -D"sonar.projectKey=VV-Day3-Project" -D"sonar.sources=." -D"sonar.host.url=http://13.203.151.240:9000" -D"sonar.token='${SONAR_TOKEN}'"'
-                bat """
-                 %SONAR_HOME%\\sonar-scanner \
-                -Dsonar.projectKey=VV-Day3-Project \
-                -Dsonar.sources=. \
-                -Dsonar.host.url=http://13.203.151.240:9000 \
-                -Dsonar.token=${SONAR_TOKEN}
-                """
+                //new approach
+                script {
+                    withSonarQubeEnv("${SONAR_SERVER_NAME}") {
+                        bat """
+                        %SONAR_HOME%\\sonar-scanner \
+                        -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                        -Dsonar.token=${SONAR_TOKEN}
+                        """
+                    }
+                }
             }
         }
     }
