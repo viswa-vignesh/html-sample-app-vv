@@ -7,6 +7,7 @@ pipeline {
         SONAR_TOKEN = credentials('VV-Day3-Project-Token')
         SONAR_PROJECT_KEY = 'VV-Day3-Project'
         SONAR_SERVER_NAME = 'VV-SonarQube-Server'
+        DOCKER_CREDS = 'VV-dockerhub'
     }
 
     stages {
@@ -56,13 +57,31 @@ pipeline {
                 echo 'Starting docker image process'
                 // use script to use docker plugin
                 script {
-                    def imageName = "vv-app-iis-day3"
+                    def imageName = "docker.io/vigneshviswanathan1145/vv-app-iis-day3"
                     def imageTag = "codev1"
                     docker.build("${imageName}:${imageTag}",".")
                 }
 
                 //verify
                 bat 'docker images  |  findstr vv'
+
+            }
+        }
+        //stage 5
+        stage('pushing docker image'){
+            steps{
+                echo 'pushing docker image to dockerhub'
+                // use script to use docker plugin
+                script {
+                    def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
+                    def imageTag = "codev1"
+                    def hubCreds = "${DOCKER_CREDS}"
+                    //calling jenkins plugin docker push
+                    docker.withRegistry('https://registry.hub.docker.com', hubCreds) {
+                        docker.image(imageName + ":" + imageTag).push()
+                    }
+                    
+                }
 
             }
         }
