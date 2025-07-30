@@ -33,7 +33,6 @@ pipeline {
             steps {
                 echo 'sast '
                 // execute sonar cmd
-                //bat 'sonar-scanner.bat -D"sonar.projectKey=VV-Day3-Project" -D"sonar.sources=." -D"sonar.host.url=http://13.203.151.240:9000" -D"sonar.token=sqp_973b73f2f9a939279e2a2ec27063e850ab74b5f4"'
                 //bat 'sonar-scanner.bat -D"sonar.projectKey=VV-Day3-Project" -D"sonar.sources=." -D"sonar.host.url=http://13.203.151.240:9000" -D"sonar.token='${SONAR_TOKEN}'"'
                 bat """
                  %SONAR_HOME%\\sonar-scanner \
