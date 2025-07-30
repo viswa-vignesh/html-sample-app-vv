@@ -50,5 +50,21 @@ pipeline {
                 }
             }
         }
+        //stage 4
+        stage('building docekr image'){
+            steps{
+                echo 'Starting docker image process'
+                // use script to use docker plugin
+                script {
+                    def imageName = "vv-app-iis-day3"
+                    def imageTag = "codev1"
+                    docker.build("${imageName}:${imageTag}",".")
+                }
+
+                //verify
+                bat 'docker images  |  findstr vv'
+
+            }
+        }
     }
 }
