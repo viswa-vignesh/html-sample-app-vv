@@ -85,12 +85,12 @@ pipeline {
                 echo 'pushing docker image to dockerhub'
                 // use script to use docker plugin
                 script {
-                    //def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
-                    //def imageTag = "codev1"
+                    def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
+                    def imageTag = "codev1"
                     def hubCreds = "${DOCKER_CREDS}"
                     //calling jenkins plugin docker push
                     docker.withRegistry('https://registry.hub.docker.com', hubCreds) {
-                        docker.image(${IMAGE_NAME} + ":" + ${IMAGE_TAG}).push()
+                        docker.image(imageName + ":" + imageTag).push()
                     }
                     
                 }
