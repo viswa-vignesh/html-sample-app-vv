@@ -10,7 +10,7 @@ pipeline {
         DOCKER_CREDS = 'VV-dockerhub'
         IMAGE_NAME = "vigneshviswanathan1145/vv-app-iis-day3"
         IMAGE_TAG = "codev1"
-        TRIVY_REPORT = "trivy-vv-report.txt"
+        TRIVY_REPORT = "trivy-vv.txt"
     }
 
     stages {
@@ -90,22 +90,22 @@ pipeline {
 
 
         //stage 6
-        stage('pushing docker image'){
-            steps{
-                echo 'pushing docker image to dockerhub'
-                // use script to use docker plugin
-                script {
-                    //def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
-                    //def imageTag = "codev1"
-                    def hubCreds = "${DOCKER_CREDS}"
-                    //calling jenkins plugin docker push
-                    docker.withRegistry('https://registry.hub.docker.com', hubCreds) {
-                        docker.image(${IMAGE_NAME} + ":" + ${IMAGE_TAG}).push()
-                    }
+        // stage('pushing docker image'){
+        //     steps{
+        //         echo 'pushing docker image to dockerhub'
+        //         // use script to use docker plugin
+        //         script {
+        //             //def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
+        //             //def imageTag = "codev1"
+        //             def hubCreds = "${DOCKER_CREDS}"
+        //             //calling jenkins plugin docker push
+        //             docker.withRegistry('https://registry.hub.docker.com', hubCreds) {
+        //                 docker.image(${IMAGE_NAME} + ":" + ${IMAGE_TAG}).push()
+        //             }
                     
-                }
+        //         }
 
-            }
-        }
+        //     }
+        // }
     }
 }
