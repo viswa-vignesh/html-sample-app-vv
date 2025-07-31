@@ -97,5 +97,18 @@ pipeline {
             }
         }
 
+        // stage 7 - deploy app as container using IIS docker image 
+        stage('deploy app using container image'){
+            steps {
+                echo 'deploying app using container'
+                bat """
+                echo trying to remove container with same name 
+                docker rm vv-app-iis-day3 -f  >null 2>&1 || echo COntainer found found 
+                docker  run -itd --name vv-app-iis-day3 -p 1234:80  ${IMAGE_NAME}:${IMAGE_TAG}
+                docker  ps | findstr vv-app-iis-day3 
+                """
+            }
+        }
+
     }
 }
