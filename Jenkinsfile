@@ -75,7 +75,7 @@ pipeline {
             steps {
                 echo 'scanning using trivy'
                 bat """
-                trivy image --severity HIGH,CRITICAL --format table -o report.txt "${IMAGE_NAME}:${IMAGE_TAG}"
+                trivy image --severity HIGH,CRITICAL --format table -o ${TRIVY_REPORT} "${IMAGE_NAME}:${IMAGE_TAG}"
                 findstr /I "HIGH CRITICAL" ${TRIVY_REPORT} >null
                 if %errorlevel% == 0 (
                 echo [ERROR] HIGH or ciritical found 
