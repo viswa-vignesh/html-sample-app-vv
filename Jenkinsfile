@@ -75,8 +75,7 @@ pipeline {
             steps {
                 echo 'scanning using trivy'
                 bat """
-                trivy image ${IMAGE_NAME}:${IMAGE_TAG} --severity HIGH,CRITICAL --format table --report summary -o ${TRIVY_REPORT}
-                findstr /I "HIGH CRITICAL" ${TRIVY_REPORT} >null
+                trivy image ${IMAGE_NAME}:${IMAGE_TAG} --severity HIGH,CRITICAL --format table --report summary -o ${TRIVY_REPORT} --skip-version-check
                 """
             }
         }
