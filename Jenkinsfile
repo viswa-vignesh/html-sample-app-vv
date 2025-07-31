@@ -8,6 +8,9 @@ pipeline {
         SONAR_PROJECT_KEY = 'VV-Day3-Project'
         SONAR_SERVER_NAME = 'VV-SonarQube-Server'
         DOCKER_CREDS = 'VV-dockerhub'
+        IMAGE_NAME = "vigneshviswanathan1145/vv-app-iis-day3"
+        IMAGE_TAG = "codev1"
+        TRIVY_REPORT = "trivy-vv-report.txt"
     }
 
     stages {
@@ -57,9 +60,9 @@ pipeline {
                 echo 'Starting docker image process'
                 // use script to use docker plugin
                 script {
-                    def imageName = "docker.io/vigneshviswanathan1145/vv-app-iis-day3"
-                    def imageTag = "codev1"
-                    docker.build("${imageName}:${imageTag}",".")
+                    //def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
+                    //def imageTag = "codev1"
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}",".")
                 }
 
                 //verify
@@ -71,10 +74,17 @@ pipeline {
         stage('trivy scan'){
             steps {
                 echo 'scanning using trivy'
-                script {
-                    bat 'trivy image docker.io/vigneshviswanathan1145/vv-app-iis-day3'
-                }
-                
+                bat """
+                trivy image --severity HIGH,CRITICAL --format table -o report.txt "${IMAGE_NAME}:${IMAGE_TAG}"
+                findstr /I "HIGH CRITICAL" ${TRIVY_REPORT} >null
+                if %errorlevel% == 0 (
+                echo [ERROR] HIGH or ciritical found 
+                exit /b 1
+                )
+                else (
+                echo no error found 
+                )
+                """
             }
         }
 
@@ -85,12 +95,12 @@ pipeline {
                 echo 'pushing docker image to dockerhub'
                 // use script to use docker plugin
                 script {
-                    def imageName = "vigneshviswanathan1145/vv-app-iis-day4"
-                    def imageTag = "codev1"
+                    //def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
+                    //def imageTag = "codev1"
                     def hubCreds = "${DOCKER_CREDS}"
                     //calling jenkins plugin docker push
                     docker.withRegistry('https://registry.hub.docker.com', hubCreds) {
-                        docker.image(imageName + ":" + imageTag).push()
+                        docker.image(${IMAGE_NAME} + ":" + ${IMAGE_TAG}).push()
                     }
                     
                 }
