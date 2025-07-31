@@ -110,5 +110,17 @@ pipeline {
             }
         }
 
+        // stage 8 - run DAST 
+        stage('DAST scan'){
+            agent {
+                label 'vv-linux'
+            }
+            steps {
+                git url: "${REPO_NAME}", branch: "${BRANCH_NAME}"
+                echo 'using zap'
+                sh 'docker run -t --rm ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://172.31.33.52:1234'
+            }
+        }
+
     }
 }
