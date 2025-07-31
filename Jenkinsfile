@@ -68,12 +68,24 @@ pipeline {
             }
         }
         //stage 5
+        stage('trivy scan'){
+            steps {
+                echo 'scanning using trivy'
+                script {
+                    bat 'trivy image docker.io/vigneshviswanathan1145/vv-app-iis-day3'
+                }
+                
+            }
+        }
+
+
+        //stage 6
         stage('pushing docker image'){
             steps{
                 echo 'pushing docker image to dockerhub'
                 // use script to use docker plugin
                 script {
-                    def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
+                    def imageName = "vigneshviswanathan1145/vv-app-iis-day4"
                     def imageTag = "codev1"
                     def hubCreds = "${DOCKER_CREDS}"
                     //calling jenkins plugin docker push
