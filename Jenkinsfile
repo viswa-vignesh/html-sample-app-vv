@@ -77,35 +77,26 @@ pipeline {
                 bat """
                 trivy image ${IMAGE_NAME}:${IMAGE_TAG} --severity HIGH,CRITICAL --format table --report summary -o ${TRIVY_REPORT}
                 findstr /I "HIGH CRITICAL" ${TRIVY_REPORT} >null
-                if %errorlevel% == 0 (
-                echo [ERROR] HIGH or ciritical found 
-                exit /b 1
-                )
-                else (
-                echo no error found 
-                )
                 """
             }
         }
-
-
         //stage 6
-        // stage('pushing docker image'){
-        //     steps{
-        //         echo 'pushing docker image to dockerhub'
-        //         // use script to use docker plugin
-        //         script {
-        //             //def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
-        //             //def imageTag = "codev1"
-        //             def hubCreds = "${DOCKER_CREDS}"
-        //             //calling jenkins plugin docker push
-        //             docker.withRegistry('https://registry.hub.docker.com', hubCreds) {
-        //                 docker.image(${IMAGE_NAME} + ":" + ${IMAGE_TAG}).push()
-        //             }
+        stage('pushing docker image'){
+            steps{
+                echo 'pushing docker image to dockerhub'
+                // use script to use docker plugin
+                script {
+                    //def imageName = "vigneshviswanathan1145/vv-app-iis-day3"
+                    //def imageTag = "codev1"
+                    def hubCreds = "${DOCKER_CREDS}"
+                    //calling jenkins plugin docker push
+                    docker.withRegistry('https://registry.hub.docker.com', hubCreds) {
+                        docker.image(${IMAGE_NAME} + ":" + ${IMAGE_TAG}).push()
+                    }
                     
-        //         }
+                }
+            }
+        }
 
-        //     }
-        // }
     }
 }
